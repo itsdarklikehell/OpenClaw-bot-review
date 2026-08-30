@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Reusable Node CI
+    uses: itsdarklikehell/ci-templates/.github/workflows/ci-node.yml@v1
+    with:
+      node-version: "20"
+      # Pilot: validate the cross-repo `uses:` mechanism (lint + test).
+      # `next build` needs deploy env; skip build at pilot stage only.
+      build-command: "skip"
